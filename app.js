@@ -1,5 +1,7 @@
 const express = require('express');
 const app = express();
+const expressWinston = require('express-winston');
+const winston = require('winston');
 const router = express.Router();
 
 const path = __dirname + '/views/';
@@ -17,6 +19,17 @@ router.get('/',function(req,res){
 router.get('/sharks',function(req,res){
   res.sendFile(path + 'sharks.html');
 });
+
+
+app.use(expressWinston.logger({
+  transports: [
+    new winston.transports.Console()
+  ],
+  format: winston.format.combine(
+    winston.format.colorize(),
+    winston.format.json()
+  )
+}));
 
 app.use(express.static(path));
 app.use('/', router);
